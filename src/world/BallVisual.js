@@ -1,15 +1,24 @@
 import * as THREE from "three";
 
 export default class BallVisual {
-  constructor(scene, ballData) {
+  constructor(scene, physicsBall, ballNumber = 0) {
     this.scene = scene;
-    this.ballData = ballData;
-    this.originalRadius = ballData.radius;
+    this.physicsBall = physicsBall;
+    this.ball = physicsBall;
+    this.originalRadius = physicsBall.radius;
 
-    const geometry = new THREE.SphereGeometry(ballData.radius, 32, 32);
-    const material = new THREE.MeshStandardMaterial({
-      color: ballData.color ?? 0xff0000,
-    });
+    // Simple texture selection: cue ball uses whiteball.png,
+    // other balls use their matching number texture.
+    const textureName = ballNumber === 0
+      ? "whiteball.png"
+      : `${ballNumber}ball.png`;
+    const texturePath = `../world/textures/${textureName}`;
+    const texture = new THREE.TextureLoader().load(texturePath);
+
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+
+    const geometry = new THREE.SphereGeometry(physicsBall.radius, 32, 32);
+
     this.mesh = new THREE.Mesh(geometry, material);
 
     this.scene.add(this.mesh);
@@ -20,7 +29,15 @@ export default class BallVisual {
     this.mesh.scale.setScalar(scale);
   }
 
-  update() {
-    this.mesh.position.copy(this.ballData.position);
+  update(dt = 1 / 60) {
+    this.mesh.position.copy(this.ball.position);
+
+    const angularSpeed = this.ball.angularVelocity.length();
+
+    if (angularSpeed > 0) {
+      const axis = this.ball.angularVelocity.clone().normalize();
+
+      this.mesh.rotateOnWorldAxis(axis, angularSpeed * dt);
+    }
   }
 }

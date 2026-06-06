@@ -44,6 +44,11 @@ export default class GuiController {
   }
 
 
+  addLaunchStopControls(rocket) {
+    this.gui.add({ launch: () => rocket.launch() }, "launch").name("🚀 Launch");
+    this.gui.add({ stop: () => rocket.stop() }, "stop").name("⏸️ Stop");
+  }
+
   addTextMonitor(label, getValue) {
     const obj = { [label]: getValue() };
 
@@ -173,6 +178,69 @@ export default class GuiController {
         extraValues[label] = getValue();
         ctrl.setValue(extraValues[label]);
       }
+
+      requestAnimationFrame(update);
+    }
+
+    update();
+  }
+
+  addFuelProgressBar(label, getCurrentFuelMass, getTotalFuelMass) {
+    const folder = this.gui.addFolder(label);
+    folder.open();
+
+    const container = document.createElement("div");
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
+    container.style.alignItems = "stretch";
+    container.style.padding = "4px 0";
+
+    const progressBar = document.createElement("div");
+    progressBar.style.height = "20px";
+    progressBar.style.border = "1px solid #ccc";
+    progressBar.style.borderRadius = "4px";
+    progressBar.style.overflow = "hidden";
+    progressBar.style.background = "#eee";
+
+    const progressFill = document.createElement("div");
+    progressFill.style.height = "100%";
+    progressFill.style.width = "0%";
+    progressFill.style.transition = "width 0.3s";
+    progressFill.style.background = "green";
+    progressBar.appendChild(progressFill);
+
+    const text = document.createElement("div");
+    text.style.textAlign = "center";
+    text.style.fontSize = "12px";
+    text.style.marginTop = "4px";
+
+    container.appendChild(progressBar);
+    container.appendChild(text);
+
+    const childrenContainer = folder.domElement.querySelector(".children");
+    if (childrenContainer) {
+      childrenContainer.appendChild(container);
+    } else {
+      folder.domElement.appendChild(container); 
+    }
+
+    function getColorByRatio(ratio) {
+      if (ratio > 0.6) return "#4caf50"; 
+      if (ratio > 0.3) return "#ffb300"; 
+      return "#f44336";
+    }
+
+
+    function update() {
+      const current = getCurrentFuelMass();
+      const total = getTotalFuelMass();
+      const ratio = total > 0 ? Math.max(0, Math.min(1, current / total)) : 0;
+
+      progressFill.style.width = `${ratio * 100}%`;
+      progressFill.style.background = getColorByRatio(ratio);
+      text.textContent = `Fuel: ${current.toFixed(1)} / ${total.toFixed(
+        1
+      )} kg (${(ratio * 100).toFixed(0)}%)`;
 
       requestAnimationFrame(update);
     }

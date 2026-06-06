@@ -23,7 +23,7 @@ export default class LoadingScreen {
       z-index: 9999;
     `
     const title = document.createElement('h1')
-    title.innerText = 'Billiards Art Sandbox'
+    title.innerText = '🚀 Rockety'
     title.style.marginBottom = '20px'
     title.style.fontSize = '2.5rem'
 

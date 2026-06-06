@@ -1,3 +1,6 @@
+// src/ui/MainMenu.js
+import * as THREE from 'three'
+
 export default class MainMenu {
   constructor(uiManager) {
     this.uiManager = uiManager
@@ -12,24 +15,24 @@ export default class MainMenu {
     this.container.style.flexDirection = 'column'
     this.container.style.justifyContent = 'center'
     this.container.style.alignItems = 'center'
-    this.container.style.background = 'linear-gradient(rgba(24, 48, 56, 0.7), rgba(10, 18, 28, 0.9))'
+    this.container.style.background = 'linear-gradient(rgba(92, 8, 86, 0.7), rgba(58, 3, 105, 0.9))' 
     this.container.style.zIndex = '10'
     this.container.style.gap = '20px'
     this.container.style.fontFamily = 'sans-serif'
 
     const title = document.createElement('h1')
-    title.innerText = 'Billiards Art Sandbox'
+    title.innerText = '🚀 Rocket Simulation'
     title.style.color = '#fff'
     title.style.fontSize = '2.5rem'
     this.container.appendChild(title)
 
-    const startBtn = this._createButton('Enter Sandbox', () => this.uiManager.startSandbox?.())
-    const tableBtn = this._createButton('Select Table', () => this.uiManager.showTableSelector?.())
-    const roomBtn = this._createButton('Select Room', () => this.uiManager.showRoomSelector?.())
+    const startBtn = this._createButton('ابدأ المحاكاة', () => this.uiManager.startSimulation())
+    const rocketBtn = this._createButton('اختر الصاروخ', () => this.uiManager.showRocketSelector())
+    const mapBtn = this._createButton('اختر الخريطة', () => this.uiManager.showMapSelector())
 
     this.container.appendChild(startBtn)
-    this.container.appendChild(tableBtn)
-    this.container.appendChild(roomBtn)
+    this.container.appendChild(rocketBtn)
+    this.container.appendChild(mapBtn)
 
     document.body.appendChild(this.container)
   }
