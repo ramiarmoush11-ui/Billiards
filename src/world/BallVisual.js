@@ -12,7 +12,8 @@ export default class BallVisual {
     const textureName = ballNumber === 0
       ? "whiteball.png"
       : `${ballNumber}ball.png`;
-    const texturePath = `../world/textures/${textureName}`;
+    // const texturePath = `../world/textures/${textureName}`;
+    const texturePath = new URL(`./textures/${textureName}`, import.meta.url).href;
     const texture = new THREE.TextureLoader().load(texturePath);
 
     const material = new THREE.MeshBasicMaterial({ map: texture });

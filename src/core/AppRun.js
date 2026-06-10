@@ -39,16 +39,17 @@ export default class AppRun {
   async start() {
     await this.assetsLoader.loadAll({
       textures: [
-        {
-          name: "ground",
-          maps: {
-            map: "/textures/Ground080_2K-JPG_Color.jpg",
-          },
-          repeat: { x: 30, y: 30 },
-        },
+        // {
+        //   name: "ground",
+        //   maps: {
+        //     map: "/textures/Ground080_2K-JPG_Color.jpg",
+        //   },
+        //   repeat: { x: 30, y: 30 },
+        // },
       ],
       models: {
         // Add billiards models here
+        poolTable : '/models/pooltable.glb',
       },
       sounds: {
         // Add billiards sounds here

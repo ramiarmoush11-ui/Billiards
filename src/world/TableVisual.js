@@ -27,6 +27,8 @@ export default class TableVisual {
       color: 0x2f6f2f,
       roughness: 0.9,
       metalness: 0,
+      transparent: true,
+      opacity: 0.35,
     });
     this.floor = new THREE.Mesh(floorGeometry, floorMaterial);
     this.floor.rotation.x = -Math.PI / 2;
@@ -37,6 +39,8 @@ export default class TableVisual {
       color: 0x1f4f1f,
       roughness: 0.8,
       metalness: 0,
+      transparent: true,
+      opacity: 0.35,
     });
     const longCushionGeometry = new THREE.BoxGeometry(
       this.cushionThickness,
@@ -105,8 +109,8 @@ export default class TableVisual {
       halfLength,
     );
 
-    this.pockets[4].position.set(0, -this.ballRadius - 0.01, -halfLength);
-    this.pockets[5].position.set(0, -this.ballRadius - 0.01, halfLength);
+    this.pockets[4].position.set( -halfWidth, -this.ballRadius - 0.01, 0);
+    this.pockets[5].position.set(halfWidth, -this.ballRadius - 0.01, 0);
 
     this.scene.add(...this.pockets);
   }

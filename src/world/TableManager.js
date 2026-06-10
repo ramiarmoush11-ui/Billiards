@@ -33,8 +33,8 @@ export default class TableManager {
     this.physics = new Physics();
     this.pocketedBallsThisTurn = [];
     this.allPocketedBalls = [];
-    this.tableWidth = 2.2;
-    this.tableLength = 4.4;
+    this.tableWidth =2.25;
+    this.tableLength = 4.45;
     this.cushionThickness = 0.2;
     this.cushionHeight = 0.2;
     this.bounds = {
@@ -49,8 +49,9 @@ export default class TableManager {
       new THREE.Vector2(this.tableWidth / 2, -this.tableLength / 2),
       new THREE.Vector2(-this.tableWidth / 2, this.tableLength / 2),
       new THREE.Vector2(this.tableWidth / 2, this.tableLength / 2),
-      new THREE.Vector2(0, -this.tableLength / 2),
-      new THREE.Vector2(0, this.tableLength / 2),
+
+      new THREE.Vector2(-this.tableWidth / 2, 0),   //I changed this so just remember !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! to switch the pockets being in the wrong place
+      new THREE.Vector2(this.tableWidth / 2, 0),
     ];
 
     this.pocketRadius = 0.12;
@@ -119,6 +120,19 @@ export default class TableManager {
       cushionHeight: this.cushionHeight,
       ballRadius: this.physics.ball.radius,
     });
+
+        const models = this.assetsLoader.getModels();  //I add this part to add the table at the position(0,-ballradius,0) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    this.tableModel = models.poolTable;               //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    if (this.tableModel) {
+      this.scene.add(this.tableModel);
+
+      this.tableModel.position.set(0, -1.5, 0);
+
+      this.tableModel.rotation.y= Math.PI/2;
+
+      this.tableModel.scale.set(1, 1, 1);
+    }
 
     this.ballVisuals = this.physics.balls.map((ball, index) => {
       // Index 0 is the cue ball; remaining balls map to numbered textures.
