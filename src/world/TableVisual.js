@@ -12,7 +12,6 @@ export default class TableVisual {
     this.cushionHeight = cushionHeight;
     this.ballRadius = ballRadius;
 
-    this.scene.background = new THREE.Color(0x222222);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     const sunLight = new THREE.DirectionalLight(0xffffff, 1);

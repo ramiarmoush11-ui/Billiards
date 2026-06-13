@@ -19,6 +19,7 @@ export default class AppRun {
 
     this.canvas = canvas;
     this.scene = new THREE.Scene();
+    this.scene.background= new THREE.Color(0x222222);
 
     this.sizes = new Sizes();
     this.eventEmitter = new EventEmitter();

@@ -27,8 +27,18 @@ export default class TableManager {
     this.shotInProgress = false;
     this.currentPlayer = 0;
     this.assetsLoader = app.assetsLoader;
-    this.scene = app.scene;
+    this.scene = app.scene;       //!!!!!!!!!!!!!I am creating the group called table group!!!!!!!!!!!!!!!         
+
+
+    this.tableGroup= new THREE.Group();
+    this.tableGroup.name="TableGroup";
+    this.scene.add(this.tableGroup)
+    
     this.camera = app.camera;
+    
+        this.camera.setTarget(this.tableGroup)
+        this.camera.setAngledView()                                    //trying out the camera position function
+    
     this.canvas = app.canvas;
     this.physics = new Physics();
     this.pocketedBallsThisTurn = [];
@@ -112,8 +122,8 @@ export default class TableManager {
     console.log("Current Mode:", this.gameMode);
   }
 
-  async init() {
-    this.tableVisual = new TableVisual(this.scene, {
+  async init() {                                               //I changed This so that the table visual gets added to the table group.!!!!!!!!!!!!!
+    this.tableVisual = new TableVisual(this.tableGroup, {
       tableWidth: this.tableWidth,
       tableLength: this.tableLength,
       cushionThickness: this.cushionThickness,
@@ -122,10 +132,10 @@ export default class TableManager {
     });
 
         const models = this.assetsLoader.getModels();  //I add this part to add the table at the position(0,-ballradius,0) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    this.tableModel = models.poolTable;               //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    this.tableModel = models.poolTable;               // and it is added to the table group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     if (this.tableModel) {
-      this.scene.add(this.tableModel);
+      this.tableGroup.add(this.tableModel);
 
       this.tableModel.position.set(0, -1.5, 0);
 
@@ -137,15 +147,17 @@ export default class TableManager {
     this.ballVisuals = this.physics.balls.map((ball, index) => {
       // Index 0 is the cue ball; remaining balls map to numbered textures.
       const ballNumber = index === 0 ? 0 : index;
-      return new BallVisual(this.scene, ball, ballNumber);
+      return new BallVisual(this.tableGroup, ball, ballNumber);        //This was changed two to make the visual walls get added to the table group.!!!!!!!!!!!!!!!
     });
     this.ballVisual = this.ballVisuals[0];
     for (const ball of this.physics.balls) {
       ball.friction = this.guiState.ballRoughness;
       ball.forces.push(this.rollingFriction);
     }
-    this.camera.instance.position.set(0, 2, 5);
-    this.camera.instance.lookAt(this.ballVisual.mesh.position);
+    // this.camera.instance.position.set(0, 2, 5);
+    const ballWorldPosition= new THREE.Vector3()      //!!!!!!!!!!!!!!!!!!!!!             
+    this.ballVisual.mesh.getWorldPosition(ballWorldPosition)  //!!!!!!!!!!!!!
+    this.camera.instance.lookAt(ballWorldPosition);      //after we added teh ball visual to the table group this was wrong so I fixed it
 
     const strikeDirection = this.getStrikeDirection();
     this.strikeArrow = new THREE.ArrowHelper(
@@ -154,9 +166,11 @@ export default class TableManager {
       this.getStrikeArrowLength(),
       0xffd54f,
     );
-    this.scene.add(this.strikeArrow);
+    this.tableGroup.add(this.strikeArrow);         //strikeArrow too is added to the table group!!!!!!!!!!
 
     this.setGUI();
+
+    this.tableGroup.position.set(0,-1,0)
   }
   update(dt) {
     // تحديث الفيزياء يدوياً
