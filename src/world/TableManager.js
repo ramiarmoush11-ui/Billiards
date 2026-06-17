@@ -170,7 +170,7 @@ export default class TableManager {
 
     this.setGUI();
 
-    this.tableGroup.position.set(0,-1,0)
+    this.tableGroup.position.set(-2.4,1.6,0)
   }
   update(dt) {
     // تحديث الفيزياء يدوياً
