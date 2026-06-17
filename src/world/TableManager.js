@@ -173,9 +173,26 @@ export default class TableManager {
     this.tableGroup.position.set(0,-1,0)
   }
   update(dt) {
-    // تحديث الفيزياء يدوياً
+    // 1. تحديث الفيزياء يدوياً أولاً
     this.physics.update(dt);
 
+    // 2. تصحيح فوري لطيران الكرات (قيد المحور Y)
+    for (const ball of this.physics.balls) {
+      if (ball.isPocketed) continue;
+
+      // تثبيت الارتفاع على مستوى سطح الطاولة (افترضنا هنا 0 بناءً على الإحداثيات الافتراضية)
+      ball.position.y = 0; 
+
+      // تصفير السرعة العمودية تماماً لمنع الكرة من تجميع قوى تدفعها للأعلى
+      if (ball.velocity) {
+        ball.velocity.y = 0;
+      }
+      
+      // إذا كان المحرك الفيزيائي يحتوي على قوى مجمعة (Forces)، يفضل تصفير الـ Y لها أيضاً
+      if (ball.forces && ball.forces.y) {
+        ball.forces.y = 0;
+      }
+    }
     const anyBallMoving = this.isAnyBallMoving();
 
     if (!this.shotInProgress && anyBallMoving) {

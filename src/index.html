@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billiards Scientific Simulation</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <canvas class="webgl"></canvas>
+
+  <div id="physics-info" style="position: absolute; top: 10px; left: 10px; color: white; font-family: sans-serif; pointer-events: none;">
+    <h2>Billiards Simulation</h2>
+    <p>Status: <span id="ball-status">Moving...</span></p>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
