@@ -27,7 +27,7 @@ export default class TableVisual {
       roughness: 0.9,
       metalness: 0,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.00,
     });
     this.floor = new THREE.Mesh(floorGeometry, floorMaterial);
     this.floor.rotation.x = -Math.PI / 2;
@@ -39,7 +39,7 @@ export default class TableVisual {
       roughness: 0.8,
       metalness: 0,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.00,
     });
     const longCushionGeometry = new THREE.BoxGeometry(
       this.cushionThickness,
@@ -72,6 +72,8 @@ export default class TableVisual {
 
     const pocketMaterial = new THREE.MeshStandardMaterial({
       color: 0x000000,
+      transparent: true,
+      opacity: 0.00,
     });
 
    

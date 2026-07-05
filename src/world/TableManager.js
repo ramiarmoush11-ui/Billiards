@@ -146,7 +146,7 @@ export default class TableManager {
 
     this.ballVisuals = this.physics.balls.map((ball, index) => {
       // Index 0 is the cue ball; remaining balls map to numbered textures.
-      const ballNumber = index === 0 ? 0 : index;
+      const ballNumber = index === 0 ? 0 : ball.number;
       return new BallVisual(this.tableGroup, ball, ballNumber);        //This was changed two to make the visual walls get added to the table group.!!!!!!!!!!!!!!!
     });
     this.ballVisual = this.ballVisuals[0];
