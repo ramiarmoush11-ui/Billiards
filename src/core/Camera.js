@@ -1,0 +1,86 @@
+import * as THREE from "three";
+import FirstPersonControls from "./FirstPersonControls.js";
+
+export default class Camera {
+  /**
+   * @param {import('./AppRun.js').default} app
+   */
+  constructor(app) {
+    this.app = app; 
+    this.sizes = app.sizes;
+    this.scene = app.scene;
+    this.canvas = app.canvas;
+    this.eventEmitter = app.eventEmitter;
+    this.setInstance();
+    this.setSpectatorControls();
+    this.setViewShortcuts();
+  }
+
+  setInstance() {
+    this.instance = new THREE.PerspectiveCamera(
+      60,
+      this.sizes.width / this.sizes.height,
+      1,         
+      2e7
+    );
+    this.instance.position.set(0, 2, 5);
+    this.scene.add(this.instance);
+  }
+
+  setSpectatorControls() {
+    // جلب الـ soundManager بأي طريقة متاحة في الـ app لمنع أي خطأ برمي
+    const soundManager = this.app.soundManager || this.app.sound;
+    this.controls = new FirstPersonControls(
+      this.instance,
+      this.canvas,
+      this.eventEmitter,
+      soundManager
+    );
+  }
+
+  resize() {
+    this.instance.aspect = this.sizes.width / this.sizes.height;
+    this.instance.updateProjectionMatrix();
+  }
+
+  update() {
+    this.controls.update();
+  }
+
+  setTarget(targetObject){  
+    this.targetObject=targetObject
+  }
+
+  getTargetPosition(){
+    const targetPosition= new THREE.Vector3();
+    if(this.targetObject){
+      this.targetObject.getWorldPosition(targetPosition);
+    }
+    return targetPosition;
+  }
+
+  setView(offset , up = new THREE.Vector3(0,1,0)){
+    const targetPosition=this.getTargetPosition()
+    this.instance.position.copy(targetPosition).add(offset)
+    this.instance.up.copy(up) 
+    this.instance.lookAt(targetPosition)
+  }
+
+  setTopView(){ this.setView(new THREE.Vector3(0,3 ,0),new THREE.Vector3(1,0,0)) }
+  setLeftView() { this.setView(new THREE.Vector3(-3, 1, 0)); }
+  setRightView() { this.setView(new THREE.Vector3(3, 1, 0)); }
+  setFrontView() { this.setView(new THREE.Vector3(0, 0.5, 5)); }
+  setBackView() { this.setView(new THREE.Vector3(0, 0.5, -5)); }
+  setAngledView() { this.setView(new THREE.Vector3(3.2, 3, 3.2)); }
+
+  setViewShortcuts(){
+    window.addEventListener("keydown", (event) => {
+      if (event.key==="1") this.setTopView();
+      if(event.key==="2") this.setLeftView()
+      if(event.key==="3") this.setRightView()
+      if(event.key==="4") this.setFrontView()
+      if(event.key==="5") this.setBackView()
+      if(event.key==="6") this.setAngledView()
+    })
+  }
+}
