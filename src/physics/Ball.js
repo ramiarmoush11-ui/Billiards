@@ -57,5 +57,15 @@ export default class Ball {
   update() {
     // Driven by the Physics.js integrator.
   }
+
+  getKineticEnergy() {
+  // الطاقة الحركية الخطية: 0.5 * Mass * Velocity^2
+  const linearKE = 0.5 * this.mass * this.velocity.lengthSq();
+  
+  // الطاقة الحركية الدورانية: 0.5 * MomentOfInertia * AngularVelocity^2
+  const rotationalKE = 0.5 * this.momentOfInertia * this.angularVelocity.lengthSq();
+  
+  return linearKE + rotationalKE; // بالجول (Joule)
+}
 }
 

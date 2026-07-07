@@ -6,6 +6,7 @@ import RollingFriction from "./../physics/RollingFriction.js";
 import TableVisual from "./TableVisual.js";
 import { GUI_LABELS } from "./ui/GuiLabels.js";
 import GameMode from "../core/GameMode.js";
+import PhysicsHUD from "./ui/PhysicsHUD.js";
 export default class TableManager {
   /**
    * @param {import('./../core/AppRun.js').default} app
@@ -174,7 +175,13 @@ export default class TableManager {
       0xffd54f,
     );
     this.tableGroup.add(this.strikeArrow);         //strikeArrow too is added to the table group!!!!!!!!!!
-
+    // إضافة HUD
+    this.physicsHUD = new PhysicsHUD();
+    this.physicsHUD.setPhysicsReferences(
+    this.physics,
+    this.ballVisual,
+    this.rollingFriction
+    );
     this.setGUI();
 
     this.tableGroup.position.set(-2.4,1.6,0)
@@ -182,7 +189,8 @@ export default class TableManager {
   update(dt) {
     // تحديث الفيزياء يدوياً
     this.physics.update(dt);
-
+// تحديث HUD
+this.physicsHUD?.update();
     const anyBallMoving = this.isAnyBallMoving();
 
     if (!this.shotInProgress && anyBallMoving) {
@@ -638,7 +646,13 @@ ball.angularVelocity.set(0, 0, 0);
       .onChange((value) => {
         this.physics.wallFriction = value;
       });
-
+this.gui.add({
+    toggleHUD: () => {
+        if (this.physicsHUD) {
+            this.physicsHUD.toggleVisibility();
+        }
+    }
+}, 'toggleHUD').name('📊 Toggle HUD');
     this.applyLanguageLabels();
     this.updateGameModeUI();
   }
