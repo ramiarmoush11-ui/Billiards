@@ -15,7 +15,7 @@ export default class Ball {
     this.angularAcceleration = new THREE.Vector3(0, 0, 0);
     this.angularVelocity = new THREE.Vector3(0, 0, 0);
     this.angular = new THREE.Vector3(0, 0, 0);
-    this.radius = 0.0285; // 28.5mm radius
+    this.radius = 0.064; // 28.5mm radius  !!!!!!! I am mohamad I changed the radius to 0.064 for it to fit with the table
     this.forces = [];
   }
 

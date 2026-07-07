@@ -22,6 +22,10 @@ export default class Physics {
     this.collisionPasses = 3;
     this.boundClampVelocity = this.clampVelocity.bind(this);
     this.bounds = null;
+
+    // أضفنا هذا السطر فقط لاستقبال دالة الصوت بشكل ديناميكي دون التأثير على التصميم
+    this.onBallCollision = null;
+
     // Standard rack: 1 cue ball + 15 balls in a triangle.
     this.balls = [];
     const cueBall = new Ball();
@@ -34,12 +38,21 @@ export default class Physics {
     const rowDepth = spacing * Math.sqrt(3) * 0.5;
     const rackStartZ = 1.5;
     // Build a 5-row triangle (1 + 2 + 3 + 4 + 5 = 15).
-    let ballNumber = 1;
+    const rackBallNumberOrder =[         //!!!!!!!!!!!! I changed this and the loop to make the ball order work
+      1,
+      3,2,
+      4,8,11,
+      6,7,9,10,
+      5,12,13,14,15
+    ];
+
+    let indexx=0;
+
     for (let row = 0; row < 5; row += 1) {
       for (let col = 0; col <= row; col += 1) {
         const ball = new Ball();
-        ball.number = ballNumber;
-        ballNumber++;
+        ball.number = rackBallNumberOrder[indexx];
+        indexx++;
         const xOffset = (col - row / 2) * spacing;
         const zOffset = rackStartZ + row * rowDepth;
         ball.position.set(xOffset, 0, zOffset);
@@ -126,7 +139,8 @@ export default class Physics {
         balls: this.balls,
         overlapTolerance: this.overlapTolerance,
         maxSpeed: this.maxSpeed,
-        clampVelocity: this.boundClampVelocity,
+        clampVelocity: this.boundClampVelocity, // أعدنا الـ bound الأصلي المستقر لفيزيائيتك هنا 👈
+        onBallCollision: this.onBallCollision,  // مررنا دالة الصوت هنا بأمان 👈
       });
     }
   }

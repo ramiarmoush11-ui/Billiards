@@ -41,6 +41,15 @@ export default class TableManager {
     
     this.canvas = app.canvas;
     this.physics = new Physics();
+    this.physics.onBallCollision = (ballA, ballB, speed) => {
+      console.log("💥 حدث اصطدام بين كرتين! السرعة المقاسة هي:", speed);
+      // خفضنا القيمة من 0.08 لـ 0.01 لكي يلقط الأصوات الخفيفة
+      if (speed < 0.01) return;
+
+      // جعلنا الحد الأقصى للـ volume هو 1.0 لكي لا يحصل تشويه للصوت
+      const volume = THREE.MathUtils.clamp(speed / 4.5, 0.05, 1.0);
+      this.assetsLoader?.playSound?.("ballHit", { volume });
+    };
     this.pocketedBallsThisTurn = [];
     this.allPocketedBalls = [];
     this.tableWidth =2.25;
@@ -115,9 +124,7 @@ export default class TableManager {
     };
     this.rollingFriction = new RollingFriction({
       floorFriction: this.guiState.floorFriction,
-    });
-
-    this.init();
+    });this.init();
     this.updateCurrentPlayerUI();
     console.log("Current Mode:", this.gameMode);
   }
@@ -170,29 +177,12 @@ export default class TableManager {
 
     this.setGUI();
 
-    this.tableGroup.position.set(0,-1,0)
+    this.tableGroup.position.set(-2.4,1.6,0)
   }
   update(dt) {
-    // 1. تحديث الفيزياء يدوياً أولاً
+    // تحديث الفيزياء يدوياً
     this.physics.update(dt);
 
-    // 2. تصحيح فوري لطيران الكرات (قيد المحور Y)
-    for (const ball of this.physics.balls) {
-      if (ball.isPocketed) continue;
-
-      // تثبيت الارتفاع على مستوى سطح الطاولة (افترضنا هنا 0 بناءً على الإحداثيات الافتراضية)
-      ball.position.y = 0; 
-
-      // تصفير السرعة العمودية تماماً لمنع الكرة من تجميع قوى تدفعها للأعلى
-      if (ball.velocity) {
-        ball.velocity.y = 0;
-      }
-      
-      // إذا كان المحرك الفيزيائي يحتوي على قوى مجمعة (Forces)، يفضل تصفير الـ Y لها أيضاً
-      if (ball.forces && ball.forces.y) {
-        ball.forces.y = 0;
-      }
-    }
     const anyBallMoving = this.isAnyBallMoving();
 
     if (!this.shotInProgress && anyBallMoving) {
@@ -236,9 +226,7 @@ export default class TableManager {
       if (ball.isPocketed) {
         visual.mesh.visible = false;
         continue;
-      }
-
-      visual.mesh.visible = true;
+      }visual.mesh.visible = true;
       visual.update(dt);
     }
     this.tableVisual?.update(this.physics.ball.radius);
@@ -388,17 +376,21 @@ export default class TableManager {
         const distance = Math.sqrt(dx * dx + dz * dz);
 
         if (distance < this.pocketRadius) {
-          if (ball === this.physics.balls[0]) {
-            ball.velocity.set(0, 0, 0);
-            ball.angularVelocity.set(0, 0, 0);
-            ball.position.set(0, 0, -1.5);
-            continue;
-          } else {
+
+  if (ball === this.physics.balls[0]) {
+
+    this.assetsLoader?.playSound?.("cueBallFoul", { volume: 1.0 });
+
+    ball.velocity.set(0, 0, 0);
+    ball.angularVelocity.set(0, 0, 0);
+    ball.position.set(0, 0, -1.5);
+
+    continue;
+  } 
+  else {
             if (this.gameMode === GameMode.NORMAL) {
               this.pocketedBallsThisTurn.push(ball.number);
-              this.allPocketedBalls.push(ball.number);
-
-              for (const player of this.players) {
+              this.allPocketedBalls.push(ball.number);for (const player of this.players) {
                 if (this.isBallInPlayerGroup(ball.number, player)) {
                   player.pocketed.push(ball.number);
                   break;
@@ -412,13 +404,24 @@ export default class TableManager {
               this.updateScoreUI();
             }
 
-            ball.isPocketed = true;
+            const speed = ball.velocity.length();
 
-            console.log("Pocketed Ball:", ball.number);
 
-            ball.velocity.set(0, 0, 0);
-            ball.angularVelocity.set(0, 0, 0);
-            break;
+
+const volume = THREE.MathUtils.clamp(
+    0.5 + speed / 2,
+    0.5,
+    1.0
+);
+console.log("Playing pocket sound", volume);
+this.assetsLoader?.playSound?.("ballPocket", { volume });
+
+ball.isPocketed = true;
+
+console.log("Pocketed Ball:", ball.number);
+
+ball.velocity.set(0, 0, 0);
+ball.angularVelocity.set(0, 0, 0);
           }
         }
       }
@@ -515,9 +518,7 @@ export default class TableManager {
     this.guiControllers.player1Score.disable();
     this.guiControllers.player2Score.disable();
 
-    this.guiControllers.currentPlayer.disable();
-
-    this.guiControllers.gameMode = this.gui
+    this.guiControllers.currentPlayer.disable();this.guiControllers.gameMode = this.gui
       .add(this.guiState, "gameMode", [
         GameMode.PRACTICE,
         GameMode.PHYSICS_TEST,
@@ -623,9 +624,7 @@ export default class TableManager {
       .name(labels.floorFriction)
       .onChange((value) => {
         this.rollingFriction.floorFriction = value;
-      });
-
-    const tablePhysicsFolder = this.gui.addFolder(labels.tablePhysics);
+      });const tablePhysicsFolder = this.gui.addFolder(labels.tablePhysics);
     this.guiFolders.tablePhysics = tablePhysicsFolder;
     this.guiControllers.restitution = tablePhysicsFolder
       .add(this.guiState, "restitution", 0.1, 1, 0.01)
