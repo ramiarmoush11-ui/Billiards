@@ -6,6 +6,7 @@ export default class Camera {
    * @param {import('./AppRun.js').default} app
    */
   constructor(app) {
+    this.app = app; 
     this.sizes = app.sizes;
     this.scene = app.scene;
     this.canvas = app.canvas;
@@ -19,7 +20,7 @@ export default class Camera {
     this.instance = new THREE.PerspectiveCamera(
       60,
       this.sizes.width / this.sizes.height,
-      1,         //change this to set how close things will render next to the camera
+      1,         
       2e7
     );
     this.instance.position.set(0, 2, 5);
@@ -27,10 +28,13 @@ export default class Camera {
   }
 
   setSpectatorControls() {
+    // جلب الـ soundManager بأي طريقة متاحة في الـ app لمنع أي خطأ برمي
+    const soundManager = this.app.soundManager || this.app.sound;
     this.controls = new FirstPersonControls(
       this.instance,
       this.canvas,
-      this.eventEmitter
+      this.eventEmitter,
+      soundManager
     );
   }
 
@@ -43,86 +47,40 @@ export default class Camera {
     this.controls.update();
   }
 
-  //I am implementing the camera positions system
-
-  setTarget(targetObject){  //what will the camera look at (tableGroup)
+  setTarget(targetObject){  
     this.targetObject=targetObject
   }
 
   getTargetPosition(){
     const targetPosition= new THREE.Vector3();
-
     if(this.targetObject){
       this.targetObject.getWorldPosition(targetPosition);
     }
-
     return targetPosition;
   }
 
   setView(offset , up = new THREE.Vector3(0,1,0)){
     const targetPosition=this.getTargetPosition()
-
     this.instance.position.copy(targetPosition).add(offset)
-    this.instance.up.copy(up) //setting the up for orientation
-    
+    this.instance.up.copy(up) 
     this.instance.lookAt(targetPosition)
-    
   }
 
-  setTopView(){
-    this.setView(new THREE.Vector3(0,3 ,0),new THREE.Vector3(1,0,0))
-  }
-
-    setLeftView() {
-    this.setView(
-      new THREE.Vector3(-3, 1, 0)
-    );
-  }
-
-  setRightView() {
-    this.setView(
-      new THREE.Vector3(3, 1, 0)
-    );
-  }
-
-  setFrontView() {
-    this.setView(
-      new THREE.Vector3(0, 0.5, 5)
-    );
-  }
-
-  setBackView() {
-    this.setView(
-      new THREE.Vector3(0, 0.5, -5)
-    );
-  }
-
-  setAngledView() {
-    this.setView(
-      new THREE.Vector3(3.2, 3, 3.2)
-    );
-  }
-
+  setTopView(){ this.setView(new THREE.Vector3(0,3 ,0),new THREE.Vector3(1,0,0)) }
+  setLeftView() { this.setView(new THREE.Vector3(-3, 1, 0)); }
+  setRightView() { this.setView(new THREE.Vector3(3, 1, 0)); }
+  setFrontView() { this.setView(new THREE.Vector3(0, 0.5, 5)); }
+  setBackView() { this.setView(new THREE.Vector3(0, 0.5, -5)); }
+  setAngledView() { this.setView(new THREE.Vector3(3.2, 3, 3.2)); }
 
   setViewShortcuts(){
     window.addEventListener("keydown", (event) => {
-      if (event.key==="1")
-        this.setTopView();
-
-      if(event.key==="2")
-        this.setLeftView()
-
-      if(event.key==="3")
-        this.setRightView()
-
-      if(event.key==="4")
-        this.setFrontView()
-
-      if(event.key==="5")
-        this.setBackView()
-
-      if(event.key==="6")
-        this.setAngledView()
+      if (event.key==="1") this.setTopView();
+      if(event.key==="2") this.setLeftView()
+      if(event.key==="3") this.setRightView()
+      if(event.key==="4") this.setFrontView()
+      if(event.key==="5") this.setBackView()
+      if(event.key==="6") this.setAngledView()
     })
   }
 }
