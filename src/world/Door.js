@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
 export default class Door {
-  constructor(scene, camera, soundManager) { // 👈 أضفنا soundManager هنا لقراءة الصوت
+  constructor(scene, camera, soundManager) {
     this.scene = scene;
     this.camera = camera;
-    this.soundManager = soundManager; // 👈 حفظ الساوند مانجير بالـ instance
+    this.soundManager = soundManager;
 
     this.doorPosition = new THREE.Vector3(0, 0, 11); 
     
@@ -18,7 +18,6 @@ export default class Door {
     this.leftDoorGroup = new THREE.Group();
     this.rightDoorGroup = new THREE.Group();
 
-    // متغيرات تتبع حالة الصوت لمنع التكرار اللانهائي في الفريمات
     this.wasOpen = false;
 
     this.init();
@@ -96,7 +95,6 @@ export default class Door {
       this.leftDoorGroup.position.x = THREE.MathUtils.lerp(this.leftDoorGroup.position.x, this.leftOpenX, this.openSpeed);
       this.rightDoorGroup.position.x = THREE.MathUtils.lerp(this.rightDoorGroup.position.x, this.rightOpenX, this.openSpeed);
       
-      // 🔊 تشغيل صوت فتح الباب مرة واحدة عند دخول نطاق التحسس
       if (!this.wasOpen) {
         if (this.soundManager) {
           this.soundManager.play("doorOpen", { volume: 0.6 });
@@ -107,7 +105,6 @@ export default class Door {
       this.leftDoorGroup.position.x = THREE.MathUtils.lerp(this.leftDoorGroup.position.x, this.leftClosedX, this.openSpeed);
       this.rightDoorGroup.position.x = THREE.MathUtils.lerp(this.rightDoorGroup.position.x, this.rightClosedX, this.openSpeed);
       
-      // 🔊 تشغيل صوت إغلاق الباب مرة واحدة عند الخروج من نطاق التحسس
       if (this.wasOpen) {
         if (this.soundManager) {
           this.soundManager.play("doorClose", { volume: 0.6 });
@@ -116,4 +113,4 @@ export default class Door {
       }
     }
   }
-}س
+}

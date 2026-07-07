@@ -22,8 +22,7 @@ export default function detectBallCollisions({
       if (centerDistance <= touchDistance) {
 
         const normal = ballB.position.clone().sub(ballA.position);
-        // 🛑 تثبيت المحور Y لمنع أي دفع عمودي
-        normal.y = 0; 
+        normal.y = 0;
         
         const normalLength = normal.length();
         if (normalLength === 0) {
@@ -53,7 +52,6 @@ export default function detectBallCollisions({
               ballA.position.addScaledVector(normal, -correctionA);
               ballB.position.addScaledVector(normal, correctionB);
               
-              // 🛑 نضمن بقاء الكرات على سطح الطاولة (Y = 0)
               ballA.position.y = 0;
               ballB.position.y = 0;
             }
@@ -61,8 +59,7 @@ export default function detectBallCollisions({
         }
 
         const relativeVelocity = ballB.velocity.clone().sub(ballA.velocity);
-        // تصفير الفرق العمودي في السرعة
-        relativeVelocity.y = 0; 
+        relativeVelocity.y = 0;
 
         const approachSpeed = relativeVelocity.dot(normal);
 
@@ -113,12 +110,11 @@ export default function detectBallCollisions({
           }
 
           const impulse = normal.clone().multiplyScalar(impulseMagnitude);
-          impulse.y = 0; // 🛑 منع طاقة الاندفاع من تحريك الكرة للأعلى
+          impulse.y = 0;
 
           ballA.velocity.addScaledVector(impulse, -1 / massA);
           ballB.velocity.addScaledVector(impulse, 1 / massB);
           
-          // 🛑 تصفير أي سرعة صعود وهبوط
           ballA.velocity.y = 0;
           ballB.velocity.y = 0;
 
@@ -150,7 +146,6 @@ export default function detectBallCollisions({
               const torqueA = new THREE.Vector3().crossVectors(contactOffsetA, impulseA);
               const torqueB = new THREE.Vector3().crossVectors(contactOffsetB, impulseB);
               
-              // لجعل الدوران يؤثر فقط على التدحرج الأفقي، نلغي عزم الدوران حول المحاور غير المرغوبة لو لزم الأمر
               const deltaOmegaA = torqueA.multiplyScalar(transferScale / ballA.momentOfInertia);
               const deltaOmegaB = torqueB.multiplyScalar(transferScale / ballB.momentOfInertia);
               
@@ -193,7 +188,6 @@ export default function detectBallCollisions({
             ballB.velocity.addScaledVector(frictionImpulse, 1 / massB);
           }
 
-          // إعادة تصدير السرعات الممسوحة
           ballA.velocity.y = 0;
           ballB.velocity.y = 0;
 

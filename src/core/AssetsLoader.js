@@ -14,7 +14,6 @@ export default class AssetsLoader {
     this.textureLoader = new TextureLoader();
     this.modelLoader = new ModelLoader();
     
-    // التعديل هنا: نمرر الـ app مباشرة لضمان استخدام الـ AudioListener الموحد للعبة
     this.soundManager = new SoundManager(app);
 
     this.total = 0;
@@ -120,16 +119,13 @@ export default class AssetsLoader {
     return this.soundManager.sounds;
   }
 
-  /**
-   * تشغيل الصوت مع إمكانية تعديل الـ volume ديناميكياً (مثل قوة الاصطدام)
-   */
+  
   playSound(name, options = {}) {
     if (!this.soundManager) {
       console.warn("SoundManager is not initialized");
       return;
     }
 
-    // التعديل هنا: إذا أرسلنا volume مخصص عند الاصطدام، نقوم بتحديثه بالصوت قبل التشغيل
     const sound = this.soundManager.get(name);
     if (sound && options.volume !== undefined) {
       sound.setVolume(options.volume);

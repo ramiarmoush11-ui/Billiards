@@ -5,8 +5,7 @@ export default class SoundManager {
    * @param {import('./AppRun.js').default} app
    */
   constructor(app) {
-    // 1. ربط الـ listener بـ listener التطبيق الأساسي المربوط بالكاميرا
-    this.listener = app.audioListener 
+    this.listener = app.audioListener
     this.loader = new THREE.AudioLoader()
     this.sounds = {}
   }
@@ -34,22 +33,19 @@ export default class SoundManager {
     })
   }
 
-  // 2. دالة التشغيل الذكية والمعدلة لحل مشكلة صوت المشي والاصطدام معاً
   play(name) {
     const sound = this.sounds[name]
     if (!sound) return
 
-    // 💡 إذا كان الصوت هو صوت المشي (Walking)
     if (name === "walking") {
       if (!sound.isPlaying) {
-        sound.setLoop(true); // نضمن أنه يتكرر تلقائياً طالما نمشي
+        sound.setLoop(true);
         sound.play()
       }
-    } 
-    // 💥 لباقي الأصوات مثل اصطدام الكرات والطاولات (تداخل سريع)
+    }
     else {
       if (sound.isPlaying) {
-        sound.stop() // إيقاف وإعادة التشغيل فوراً للاصطدامات المتتالية
+        sound.stop()
       }
       sound.play()
     }

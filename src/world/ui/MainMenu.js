@@ -15,24 +15,24 @@ export default class MainMenu {
     this.container.style.flexDirection = 'column'
     this.container.style.justifyContent = 'center'
     this.container.style.alignItems = 'center'
-    this.container.style.background = 'linear-gradient(rgba(92, 8, 86, 0.7), rgba(58, 3, 105, 0.9))' 
+    this.container.style.background = 'linear-gradient(rgba(0, 20, 40, 0.85), rgba(0, 60, 30, 0.9))'
     this.container.style.zIndex = '10'
     this.container.style.gap = '20px'
     this.container.style.fontFamily = 'sans-serif'
 
     const title = document.createElement('h1')
-    title.innerText = '🚀 Rocket Simulation'
+    title.innerText = '🎱 Billiards Simulation'
     title.style.color = '#fff'
     title.style.fontSize = '2.5rem'
     this.container.appendChild(title)
 
     const startBtn = this._createButton('ابدأ المحاكاة', () => this.uiManager.startSimulation())
-    const rocketBtn = this._createButton('اختر الصاروخ', () => this.uiManager.showRocketSelector())
-    const mapBtn = this._createButton('اختر الخريطة', () => this.uiManager.showMapSelector())
+    const tableBtn = this._createButton('اختر الطاولة', () => this.uiManager.showTableSelector())
+    const viewBtn = this._createButton('اختر المنظر', () => this.uiManager.showViewSelector())
 
     this.container.appendChild(startBtn)
-    this.container.appendChild(rocketBtn)
-    this.container.appendChild(mapBtn)
+    this.container.appendChild(tableBtn)
+    this.container.appendChild(viewBtn)
 
     document.body.appendChild(this.container)
   }
@@ -44,13 +44,13 @@ export default class MainMenu {
     btn.style.fontSize = '1.2rem'
     btn.style.border = 'none'
     btn.style.borderRadius = '8px'
-    btn.style.background = 'rgba(213, 209, 5, 0.97)'
-    btn.style.color = '#000'
+    btn.style.background = 'rgba(0, 200, 100, 0.9)'
+    btn.style.color = '#fff'
     btn.style.cursor = 'pointer'
     btn.style.transition = 'all 0.3s ease'
 
-    btn.onmouseenter = () => btn.style.background = 'rgba(213, 164, 5, 0.97)'
-    btn.onmouseleave = () => btn.style.background = 'rgba(213, 209, 5, 0.97)'
+    btn.onmouseenter = () => btn.style.background = 'rgba(0, 160, 80, 0.9)'
+    btn.onmouseleave = () => btn.style.background = 'rgba(0, 200, 100, 0.9)'
     btn.onclick = onClick
 
     return btn

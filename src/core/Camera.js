@@ -28,7 +28,7 @@ export default class Camera {
   }
 
   setSpectatorControls() {
-    // جلب الـ soundManager بأي طريقة متاحة في الـ app لمنع أي خطأ برمي
+
     const soundManager = this.app.soundManager || this.app.sound;
     this.controls = new FirstPersonControls(
       this.instance,

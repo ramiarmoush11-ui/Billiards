@@ -114,7 +114,6 @@ export default class PhysicsHUD {
             this.toggleMinimize();
         };
 
-        // النقر على الرأس أيضاً لتصغير/تكبير
         header.onclick = () => {
             this.toggleMinimize();
         };
@@ -123,7 +122,6 @@ export default class PhysicsHUD {
         header.appendChild(minimizeBtn);
         this.container.appendChild(header);
         
-        // حفظ الزر للاستخدام لاحقاً
         this.minimizeBtn = minimizeBtn;
     }
 
@@ -269,7 +267,6 @@ export default class PhysicsHUD {
         const cueBall = this.physics.balls[0];
         if (!cueBall) return;
 
-        // === Flight Data ===
         this.addField('flight-data', 'Ball Height', () => 0.00, (v) => v.toFixed(2) + ' m');
         this.addField('flight-data', 'Time', () => this.physics.time, (v) => v.toFixed(2) + ' s');
 
@@ -318,10 +315,7 @@ export default class PhysicsHUD {
         this.addField('ball-properties', 'Friction', () => cueBall.friction, (v) => v.toFixed(3));
         this.addField('ball-properties', 'Restitution', () => cueBall.restitution, (v) => v.toFixed(3));
 
-        // === Table Properties === تم حذفه بالكامل
-        // this.addField('table-properties', 'Floor Friction', () => this.rollingFriction?.floorFriction || 0, (v) => v.toFixed(3));
-        // this.addField('table-properties', 'Wall Restitution', () => this.physics.restitution, (v) => v.toFixed(3));
-        // this.addField('table-properties', 'Wall Friction', () => this.physics.wallFriction, (v) => v.toFixed(3));
+       
     }
 
     update() {
