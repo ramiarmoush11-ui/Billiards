@@ -17,6 +17,7 @@ export default class AppRun {
     if (AppRun.instance) return AppRun.instance;
     AppRun.instance = this;
 
+    
     this.canvas = canvas;
     this.scene = new THREE.Scene();
     this.scene.background= new THREE.Color(0x222222);
@@ -35,6 +36,7 @@ export default class AppRun {
 
     this.sizes.on("resize", () => this.resize());
     this.time.on("tick", () => this.update());
+    
   }
 
   async start() {

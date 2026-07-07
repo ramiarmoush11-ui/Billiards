@@ -2,10 +2,9 @@ import * as THREE from "three";
 
 export default class Ball {
   constructor() {
-    // Density is how much mass is packed into each cubic meter.
-    this.density = 1700; // kg/m^3 (phenolic resin)
-    // Mass is the total amount of matter in the ball (kg).
-    this.mass = 0;
+    //كلاس الكرة
+    this.density = 1700;//كثافة مادة الراتينج الفينولي 
+    this.mass = 0;//
     this.friction = 0.2;
     this.restitution = 0.9;
     this.momentOfInertia = 0;

@@ -23,7 +23,7 @@ export default function detectBallCollisions({
 
       // If the centers are closer than the combined radii, the balls overlap/touch.
       if (centerDistance <= touchDistance) {
-        console.log("Ball collision detected");
+        // console.log("Ball collision detected");
 
         // A vector is just a direction with a length.
         // This vector points from Ball A to Ball B.
@@ -38,13 +38,7 @@ export default function detectBallCollisions({
         // The collision normal tells us which way the collision is pointing.
         normal.divideScalar(normalLength);
 
-        /* console.log(
-          "Collision normal:",
-          normal.x.toFixed(3),
-          normal.y.toFixed(3),
-          normal.z.toFixed(3),
-        ); */
-
+     
         // Overlap means the balls are slightly inside each other.
         // This can happen because movement is updated in small steps each frame.
         const overlap = touchDistance - centerDistance;
@@ -71,7 +65,7 @@ export default function detectBallCollisions({
               ballB.position.addScaledVector(normal, correctionB);
             }
           }
-          console.log("Ball overlap corrected");
+          // console.log("Ball overlap corrected");
         }
 
         // Relative velocity means: how fast Ball B is moving compared to Ball A.
@@ -82,7 +76,7 @@ export default function detectBallCollisions({
         const approachSpeed = relativeVelocity.dot(normal);
 
         if (approachSpeed < 0) {
-          console.log("Balls approaching");
+          // console.log("Balls approaching");
 
           // Tangential relative velocity at the contact point (includes spin).
           const contactOffsetA = normal.clone().multiplyScalar(ballA.radius);
@@ -103,16 +97,19 @@ export default function detectBallCollisions({
                 contactOffsetB,
               ),
             );
+
           const relativeSurfaceVelocity =
             surfaceVelocityB.sub(surfaceVelocityA);
+
           const normalSurfaceSpeed = relativeSurfaceVelocity.dot(normal);
+          
           const tangentialSurfaceVelocity = relativeSurfaceVelocity
             .clone()
             .addScaledVector(normal, -normalSurfaceSpeed);
-          console.log(
-            "Tangential contact speed:",
-            tangentialSurfaceVelocity.length().toFixed(4),
-          );
+          // console.log(
+          //   "Tangential contact speed:",
+          //   tangentialSurfaceVelocity.length().toFixed(4),
+          // );
 
           // Impulse is a quick push that changes velocity instantly.
           // Restitution controls how bouncy the collision is (1 = perfect bounce).
@@ -249,9 +246,9 @@ export default function detectBallCollisions({
           clampVelocity(ballA);
           clampVelocity(ballB);
 
-          console.log("Ball impulse applied");
+          // console.log("Ball impulse applied");
         } else {
-          console.log("Balls separating");
+          // console.log("Balls separating");
         }
       }
     }
